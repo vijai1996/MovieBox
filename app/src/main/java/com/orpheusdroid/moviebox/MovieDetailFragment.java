@@ -81,7 +81,7 @@ public class MovieDetailFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fabOnClick(v);
+                fabOnClick();
             }
         });
 
@@ -93,7 +93,7 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
-    public void fabOnClick (View v){
+    public void fabOnClick (){
         if (!movie.getTrailer().equals(""))
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movie.getTrailer())));
         else
