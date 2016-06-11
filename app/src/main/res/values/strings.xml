@@ -12,4 +12,9 @@
     <string name="wait_message">Please wait while the movies are being loaded</string>
     <string name="stage2">Hey! Let\'s save that for stage 2!</string>
     <string name="movie_trailer">Movie Trailer</string>
+    <string name="user_rating">User Rating</string>
+    <string name="plot_synopsis">Plot Synopsis</string>
+    <string name="release_date">Release Date</string>
+    <string name="user_review">User Review</string>
+    <string name="placeholder_text">Lorem ipsum dolor sit amet</string>
 </resources>

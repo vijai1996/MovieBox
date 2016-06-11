@@ -1,6 +1,7 @@
 package com.orpheusdroid.moviebox.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,25 +62,26 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
     public void onBindViewHolder(DataObjectHolder holder, int position) {
 
         //Set the data for each potion
+        Resources resources = context.getResources();
         switch (position){
             case 0:
-                holder.Title.setText("User Rating");
+                holder.Title.setText(resources.getString(R.string.user_rating));
                 holder.Content.setText(movie.getUserRating());
                 holder.rating.setVisibility(View.VISIBLE);
                 holder.rating.setRating(Float.parseFloat(movie.getUserRating()));
                 holder.rating.setIsIndicator(true);
                 break;
             case 1:
-                holder.Title.setText("Plot Synopsis");
+                holder.Title.setText(resources.getString(R.string.plot_synopsis));
                 holder.Content.setText(movie.getOverView());
                 break;
             case 2:
-                holder.Title.setText("Release Date");
+                holder.Title.setText(resources.getString(R.string.release_date));
                 holder.Content.setText(movie.getReleaseDate());
                 break;
             case 3:
-                holder.Title.setText("User Review");
-                holder.Content.setText("The Loren Ipsum text");
+                holder.Title.setText(resources.getString(R.string.user_review));
+                holder.Content.setText(resources.getString(R.string.placeholder_text));
                 break;
         }
     }
