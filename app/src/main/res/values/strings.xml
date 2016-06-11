@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MovieBox</string>
+    <string name="title_movie_detail">Movie Detail</string>
+    <string name="themoviedb_api_key" translatable="false">Placeholder api key</string>
+    <string name="ok">ok</string>
+    <string name="no_internet_title">No Internet</string>
+    <string name="no_internet_message">There is a issue with connecting to internet. Please check
+            your connection and try again </string>
+    <string name="favourite">Favourite</string>
+    <string name="toolbar_spinner">Toolbar Spinner</string>
+    <string name="wait_title">Please Wait</string>
+    <string name="wait_message">Please wait while the movies are being loaded</string>
+    <string name="stage2">Hey! Let\'s save that for stage 2!</string>
+    <string name="movie_trailer">Movie Trailer</string>
+</resources>
