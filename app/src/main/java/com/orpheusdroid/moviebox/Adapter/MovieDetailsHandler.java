@@ -99,6 +99,5 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, Bitmap> {
         iv.setImageBitmap(banner);
         if (isActivity)
             setImageToToolbar(banner);
-        //initList();
     }
 }

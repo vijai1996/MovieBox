@@ -2,7 +2,6 @@ package com.orpheusdroid.moviebox.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import android.widget.Toast;
 
 import com.orpheusdroid.moviebox.R;
 
-import java.util.ArrayList;
-
 /**
  * Created by vijai on 08-06-2016.
  */
@@ -21,6 +18,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
     private MovieDataHolder movie;
     private static Context context;
 
+    //Viewholder class holding views of the detailactivity layout implementing onClick
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
@@ -50,23 +48,19 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
         movie = myDataset;
     }
 
-    public void swap(MovieDataHolder newMovie){
-        movie = newMovie;
-        notifyDataSetChanged();
-    }
-
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent,
                                                int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.movie_details_cards, parent, false);
 
-        DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
-        return dataObjectHolder;
+        return new DataObjectHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
+
+        //Set the data for each potion
         switch (position){
             case 0:
                 holder.Title.setText("User Rating");

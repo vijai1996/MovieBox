@@ -36,6 +36,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
+        //Get the selected movie from the intent
         movie = getIntent().getParcelableExtra(MovieDetailFragment.ARG_ITEM_ID);
 
         // Show the Up button in the action bar.
@@ -49,10 +50,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.movies_details_recycler);
         iv = (ImageView) findViewById(R.id.movie_banner);
 
+        //Let's do some fetching of data again and set the data
+
         new MovieDetailsHandler(this, mRecyclerView, collapsingToolbar, iv,movie, true).
                 execute(movie.getBackdrop());
     }
 
+    //Set an intent to play the trailer is available or show a snackbar it isn't available.
     public void fabOnClick (View v){
         if (!movie.getTrailer().equals(""))
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + movie.getTrailer())));

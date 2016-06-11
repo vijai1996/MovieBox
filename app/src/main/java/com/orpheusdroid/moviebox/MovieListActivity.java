@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
 import com.orpheusdroid.moviebox.Adapter.GridLayoutAdapter;
 import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
 
@@ -53,7 +52,7 @@ public class MovieListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private GridLayoutAdapter adapter;
     private View recyclerView;
-    private JSONObject jsonPopular,jsonTopRated;
+    private JSONObject jsonPopular, jsonTopRated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +62,15 @@ public class MovieListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        //Let's add a spinner to the toolbar for sort criteria
         addSpinner(toolbar);
 
+        //Set the apikey from string resource
         Constants.setApiKey(getResources().getString(R.string.themoviedb_api_key));
 
         recyclerView = findViewById(R.id.movie_list);
+        //We dont want the recyclerview to be null!
         assert recyclerView != null;
 
         if (findViewById(R.id.movie_detail_container) != null) {
@@ -78,30 +81,43 @@ public class MovieListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        /*
+         *Set a empty recycler view so recyclerview sets a layout without throwing an error as
+         *Async execution consumes some time
+         */
         setupRecyclerView((RecyclerView) recyclerView, new ArrayList<MovieDataHolder>());
 
+        //Call the asynctask with the category and the formatted api url
         new HttpRequest(Constants.POPULAR).execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
     }
 
-    private void addSpinner(Toolbar toolbar){
+    private void addSpinner(Toolbar toolbar) {
+
+        //Create a new Arrayadapter with the selected textview and the normal textview for the list
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.menu_spinner, R.layout.layout_toolbar_spinner_title);
         adapter.setDropDownViewResource(R.layout.layout_toolbar_spinner_list);
 
+        //Create Spinner
         Spinner mNavigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
+        //Set arrayList adapter to spinner
         mNavigationSpinner.setAdapter(adapter);
+
+        //Add the spinner to the toolbar
         toolbar.addView(mNavigationSpinner);
 
+        /*
+        Handle click on item in the spinner
+        Whenever a selection is made, call the async task with relevant selection criteria and api url
+         */
         mNavigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
-                        Toast.makeText(MovieListActivity.this, "Most Popular", Toast.LENGTH_SHORT).show();
                         new HttpRequest(Constants.POPULAR).execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
                         break;
                     case 1:
-                        Toast.makeText(MovieListActivity.this, "Highest Rated", Toast.LENGTH_SHORT).show();
                         new HttpRequest(Constants.TOP_RATED).execute(Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
                         Log.d("High rated URL", Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
                         break;
@@ -118,15 +134,22 @@ public class MovieListActivity extends AppCompatActivity {
         });
     }
 
+    //Setup a empty recycler before the data is fetched and loaded
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<MovieDataHolder> movies) {
+        //Set the recyclerview has a fixed size as the api always returns only 20 items
         recyclerView.setHasFixedSize(true);
+
+        //Lets have 3 columns for the grid
         mLayoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(mLayoutManager);
+
+        //create adapter with necessary constructor parameters
         adapter = new GridLayoutAdapter(this, movies, mTwoPane);
         recyclerView.setAdapter(adapter);
     }
 
-    private void updateDataset(ArrayList<MovieDataHolder> newMovies){
+    //Swap the dataset whenever a new set of data is fetched from the api.
+    private void updateDataset(ArrayList<MovieDataHolder> newMovies) {
         adapter.swap(newMovies);
     }
 
@@ -134,19 +157,21 @@ public class MovieListActivity extends AppCompatActivity {
         private ProgressDialog dialog;
         private String mCategory;
 
-        public HttpRequest(String category){
+        public HttpRequest(String category) {
             mCategory = category;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            //Show a progressdialog to indicate the user the data is being fetched
             dialog = ProgressDialog.show(MovieListActivity.this, getResources().getString(R.string.wait_title),
                     getResources().getString(R.string.wait_message), true);
         }
 
-        private String getJson(String sURL){
-            try{
+        //Breakup method for the actual Urlconnection to fetch the json data from the api
+        private String getJson(String sURL) {
+            try {
                 URL url = new URL(sURL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15001);
@@ -154,7 +179,7 @@ public class MovieListActivity extends AppCompatActivity {
                 conn.setDoInput(true);
 
                 int code = conn.getResponseCode();
-                Log.d("Connection code", ""+code);
+                Log.d("Connection code", "" + code);
                 InputStream stream = new BufferedInputStream(conn.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder builder = new StringBuilder();
@@ -165,8 +190,12 @@ public class MovieListActivity extends AppCompatActivity {
                 }
                 conn.disconnect();
                 return builder.toString();
-            } catch (UnknownHostException e){
-                runOnUiThread(new Runnable(){
+            } catch (UnknownHostException e) {
+                /*
+                If the code reaches this point, there seem to be some issue with the user's internet
+                Let's notify them
+                 */
+                runOnUiThread(new Runnable() {
                     public void run() {
                         dialog.dismiss();
                         new AlertDialog.Builder(MovieListActivity.this)
@@ -181,7 +210,7 @@ public class MovieListActivity extends AppCompatActivity {
                                 .show();
                     }
                 });
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return "";
@@ -193,28 +222,35 @@ public class MovieListActivity extends AppCompatActivity {
             try {
 
                 JSONObject topLevel = new JSONObject();
-                if(mCategory.equals(Constants.POPULAR )){
+                if (mCategory.equals(Constants.POPULAR)) {
                     if (jsonPopular == null)
                         jsonPopular = new JSONObject(getJson(strings[0]));
                     topLevel = jsonPopular;
                 }
-                if(mCategory.equals(Constants.TOP_RATED )){
+                if (mCategory.equals(Constants.TOP_RATED)) {
                     if (jsonTopRated == null)
                         jsonTopRated = new JSONObject(getJson(strings[0]));
                     topLevel = jsonTopRated;
                 }
+                /*
+                There is some creepy caching of the json data above.
+                We dont want to fetch data every time a new criteria is selected
+                 */
+
                 JSONArray main = topLevel.getJSONArray("results");
 
-                for (int i=0; i<main.length(); i++){
+                for (int i = 0; i < main.length(); i++) {
                     JSONObject movieObject = main.getJSONObject(i);
                     String id = movieObject.getString(Constants.MOVIE_ID);
-                    String TrailerUrl = Constants.API_BASE_URL+id+"/videos?api_key="+Constants.API_KEY;
+                    String TrailerUrl = Constants.API_BASE_URL + id + "/videos?api_key=" + Constants.API_KEY;
                     JSONObject trailerObj = new JSONObject(getJson(TrailerUrl));
                     JSONArray trailerLinks = trailerObj.getJSONArray("results");
                     String trailerKey = "";
-                    if (trailerLinks.length()>0){
+                    if (trailerLinks.length() > 0) {
                         trailerKey = trailerLinks.getJSONObject(0).getString("key");
                     }
+
+                    //Parse the json and create a new custom object to hold the data
                     MovieDataHolder movie = new MovieDataHolder(
                             movieObject.getString(Constants.TITLE_TAG),
                             Constants.POSTER_BASE_PATH + movieObject.getString(Constants.POSTER_PATH_TAG),
@@ -235,6 +271,7 @@ public class MovieListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<MovieDataHolder> datas) {
+            //Update the recycler view and dismiss the dialog
             updateDataset(datas);
             dialog.dismiss();
         }

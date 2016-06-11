@@ -7,6 +7,10 @@ import android.os.Parcelable;
  * Created by vijai on 07-06-2016.
  */
 public class MovieDataHolder implements Parcelable{
+
+    /*
+    A pojo class implementing parcelable having getters to return data on a movie.
+     */
     private String Title;
     private String PosterPath;
     private String Backdrop;
@@ -78,6 +82,7 @@ public class MovieDataHolder implements Parcelable{
     public int describeContents() {
         return 0;
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

@@ -39,6 +39,7 @@ public class GridLayoutAdapter extends RecyclerView.Adapter<GridLayoutAdapter.Ho
         this.movies = movies;
         mTwoPane = twoPane;
 
+        //Set the image sizes for table and phone views
         WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -63,6 +64,7 @@ public class GridLayoutAdapter extends RecyclerView.Adapter<GridLayoutAdapter.Ho
     public void onBindViewHolder(final Holder holder, final int position) {
         final Holder myHolder = holder;
 
+        //Load the image into grids using picasso library
         Picasso.with(mContext)
                 .load(movies.get(position).getPosterPath())
                 .error(R.mipmap.ic_launcher)
@@ -70,12 +72,16 @@ public class GridLayoutAdapter extends RecyclerView.Adapter<GridLayoutAdapter.Ho
                 .into((myHolder.images), new ImageLoadedCallback(myHolder.loader){
                     @Override
                     public void onSuccess(){
+                        //Set the progressbar placeholder visibility to gone once the image completes loading
                         if (this.progressBar != null) {
                             this.progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
 
+        /*
+        On image click, bring up the fragment to show the detail or start a new activity for phone view
+         */
         myHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +105,7 @@ public class GridLayoutAdapter extends RecyclerView.Adapter<GridLayoutAdapter.Ho
 
     }
 
+    //Swap method to change the data and reload the grids
     public void swap(ArrayList<MovieDataHolder> newMovies){
         movies.clear();
         movies.addAll(newMovies);
@@ -128,6 +135,9 @@ public class GridLayoutAdapter extends RecyclerView.Adapter<GridLayoutAdapter.Ho
         }
     }
 
+    /*
+    View holder class for holding the views used in the gridlayout
+     */
     public class Holder extends RecyclerView.ViewHolder {
         private ImageView images;
         private ProgressBar loader;

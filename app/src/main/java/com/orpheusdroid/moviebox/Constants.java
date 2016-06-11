@@ -4,6 +4,9 @@ package com.orpheusdroid.moviebox;
  * Created by vijai on 10-06-2016.
  */
 public class Constants {
+    /*
+    Nothing much for comment here. Just a bunch of constant strings for fetching data from api
+     */
     public static String API_BASE_URL = "http://api.themoviedb.org/3/movie/";
     public static String POSTER_BASE_PATH = "https://image.tmdb.org/t/p/w500/";
     public static String BACKDROP_BASE_PATH = "https://image.tmdb.org/t/p/w780/";

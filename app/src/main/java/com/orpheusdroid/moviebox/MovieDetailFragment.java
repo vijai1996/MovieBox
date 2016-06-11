@@ -35,7 +35,6 @@ public class MovieDetailFragment extends Fragment {
 
     private CollapsingToolbarLayout collapsingToolbar;
 
-    //private Bitmap banner;
     private ImageView iv;
     private RecyclerView mRecyclerView;
     /**
@@ -53,8 +52,6 @@ public class MovieDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
             movie = getArguments().getParcelable(ARG_ITEM_ID);
 
             Activity activity = this.getActivity();
@@ -72,7 +69,6 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.movie_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
         iv = (ImageView) rootView.findViewById(R.id.movie_banner);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.movies_details_recycler);
@@ -87,6 +83,8 @@ public class MovieDetailFragment extends Fragment {
 
         TextView title = (TextView) rootView.findViewById(R.id.title);
         title.setText(movie.getTitle());
+
+        //Let's do some fetching of data again and set the data
         new MovieDetailsHandler(getActivity(), mRecyclerView, collapsingToolbar, iv,movie, false).
                 execute(movie.getBackdrop());
 
