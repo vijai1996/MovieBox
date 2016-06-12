@@ -18,6 +18,10 @@ import android.widget.TextView;
 import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
 import com.orpheusdroid.moviebox.Adapter.MovieDetailsHandler;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
+
 /**
  * A fragment representing a single Movie detail screen.
  * This fragment is either contained in a {@link MovieListActivity}
@@ -84,11 +88,28 @@ public class MovieDetailFragment extends Fragment {
         TextView title = (TextView) rootView.findViewById(R.id.title);
         title.setText(movie.getTitle());
 
+        showIntro(fab);
+
         //Let's do some fetching of data again and set the data
         new MovieDetailsHandler(getActivity(), mRecyclerView, collapsingToolbar, iv,movie, false).
                 execute(movie.getBackdrop());
 
         return rootView;
+    }
+
+    private void showIntro(FloatingActionButton fab) {
+        new MaterialIntroView.Builder(getActivity())
+                .enableDotAnimation(true)
+                .enableIcon(true)
+                .setFocusGravity(FocusGravity.CENTER)
+                .setFocusType(Focus.NORMAL)
+                .setDelayMillis(500)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText(getResources().getString(R.string.tutorial_trailer))
+                .setTarget(fab)
+                .setUsageId(MovieDetailActivity.INTRO_TRAILER_ID) //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     public void fabOnClick (){

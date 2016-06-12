@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,10 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.orpheusdroid.moviebox.Adapter.GridLayoutAdapter;
 import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesSelection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +35,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 
 /**
  * An activity representing a list of Movies. This activity
@@ -53,6 +59,9 @@ public class MovieListActivity extends AppCompatActivity {
     private GridLayoutAdapter adapter;
     private View recyclerView;
     private JSONObject jsonPopular, jsonTopRated;
+    private FavouritesCursor favouritesCursor;
+    private Spinner mNavigationSpinner;
+    private static String INTRO_ID = "sort_order_intro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +97,15 @@ public class MovieListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView, new ArrayList<MovieDataHolder>());
 
         //Call the asynctask with the category and the formatted api url
-        new HttpRequest(Constants.POPULAR).execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
+        //new HttpRequest(Constants.POPULAR).execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
+        //moviesAsync.
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (mNavigationSpinner.getSelectedItemPosition() == 2)
+            setRecyclerViewfromCursor();
     }
 
     private void addSpinner(Toolbar toolbar) {
@@ -99,7 +116,7 @@ public class MovieListActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.layout_toolbar_spinner_list);
 
         //Create Spinner
-        Spinner mNavigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
+        mNavigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
         //Set arrayList adapter to spinner
         mNavigationSpinner.setAdapter(adapter);
 
@@ -119,10 +136,9 @@ public class MovieListActivity extends AppCompatActivity {
                         break;
                     case 1:
                         new HttpRequest(Constants.TOP_RATED).execute(Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
-                        Log.d("High rated URL", Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
                         break;
                     case 2:
-                        Toast.makeText(MovieListActivity.this, getResources().getText(R.string.stage2), Toast.LENGTH_SHORT).show();
+                        setRecyclerViewfromCursor();
                         break;
                 }
             }
@@ -132,6 +148,46 @@ public class MovieListActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void showIntro() {
+        new MaterialIntroView.Builder(this)
+                .enableDotAnimation(true)
+                .enableIcon(true)
+                .setFocusGravity(FocusGravity.CENTER)
+                .setFocusType(Focus.NORMAL)
+                .setDelayMillis(500)
+                .enableFadeAnimation(true)
+                .performClick(true)
+                .setInfoText(getResources().getString(R.string.tutorial_sort_order))
+                .setTarget(mNavigationSpinner)
+                .setUsageId(INTRO_ID) //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void setRecyclerViewfromCursor() {
+        ArrayList<MovieDataHolder> movies = new ArrayList<>();
+        FavouritesSelection favourites = new FavouritesSelection();
+        favouritesCursor = favourites.query(getContentResolver());
+        if (favouritesCursor.getCount() == 0){
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.no_favourites_title))
+                    .setMessage(getResources().getString(R.string.no_favourites_message))
+                    .setNeutralButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mNavigationSpinner.setSelection(0);
+                        }
+                    })
+                    .show();
+            return;
+        }
+        while (favouritesCursor.moveToNext()){
+            MovieDataHolder movie = new MovieDataHolder()
+                    .fromCursor(favouritesCursor);
+            movies.add(movie);
+        }
+        updateDataset(movies);
     }
 
     //Setup a empty recycler before the data is fetched and loaded
@@ -236,7 +292,6 @@ public class MovieListActivity extends AppCompatActivity {
                 There is some creepy caching of the json data above.
                 We dont want to fetch data every time a new criteria is selected
                  */
-
                 JSONArray main = topLevel.getJSONArray("results");
 
                 for (int i = 0; i < main.length(); i++) {
@@ -274,6 +329,7 @@ public class MovieListActivity extends AppCompatActivity {
             //Update the recycler view and dismiss the dialog
             updateDataset(datas);
             dialog.dismiss();
+            showIntro();
         }
     }
 }

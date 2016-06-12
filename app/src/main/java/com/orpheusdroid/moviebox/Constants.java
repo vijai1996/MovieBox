@@ -12,6 +12,7 @@ public class Constants {
     public static String BACKDROP_BASE_PATH = "https://image.tmdb.org/t/p/w780/";
     public static String POPULAR = "popular";
     public static String TOP_RATED = "top_rated";
+    public static String FAVOURITES = "favourites";
     public static String API_KEY;
     public static String TITLE_TAG = "original_title";
     public static String POSTER_PATH_TAG = "poster_path";

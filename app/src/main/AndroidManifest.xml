@@ -28,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.orpheusdroid.moviebox.MovieListActivity" />
         </activity>
+        <provider
+            android:name="com.orpheusdroid.moviebox.ContentProvider.FavouritesProvider"
+            android:authorities="com.orpheusdroid.moviebox.provider"
+            android:exported="false" />
     </application>
 
 </manifest>

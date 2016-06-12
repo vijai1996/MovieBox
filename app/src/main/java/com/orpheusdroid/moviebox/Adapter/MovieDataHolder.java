@@ -3,6 +3,8 @@ package com.orpheusdroid.moviebox.Adapter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
+
 /**
  * Created by vijai on 07-06-2016.
  */
@@ -28,7 +30,24 @@ public class MovieDataHolder implements Parcelable{
         this.UserRating = UserRating;
         this.ReleaseDate = ReleaseDate;
         this.Backdrop = Backdrop;
+        this.id = id;
         this.trailer = trailer;
+    }
+
+    public MovieDataHolder (){
+
+    }
+
+    public MovieDataHolder fromCursor (FavouritesCursor cursor){
+        this.Title = cursor.getTitle();
+        this.PosterPath = cursor.getPosterPath();
+        this.OverView = cursor.getOverview();
+        this.UserRating = cursor.getUserRating();
+        this.ReleaseDate = cursor.getReleaseDate();
+        this.Backdrop = cursor.getBackdrop();
+        this.id = cursor.getMovieId();
+        this.trailer = cursor.getTrailer();
+        return this;
     }
 
     public String getBackdrop() {
