@@ -10,6 +10,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +20,10 @@ import android.widget.TextView;
 
 import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
 import com.orpheusdroid.moviebox.Adapter.MovieDetailsHandler;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesColumns;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesContentValues;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
+import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesSelection;
 
 import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;
@@ -41,6 +48,7 @@ public class MovieDetailFragment extends Fragment {
 
     private ImageView iv;
     private RecyclerView mRecyclerView;
+    private FavouritesSelection selection;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -60,10 +68,15 @@ public class MovieDetailFragment extends Fragment {
 
             Activity activity = this.getActivity();
 
+            selection = new FavouritesSelection();
+            selection.movieId(movie.getId());
+
             collapsingToolbar = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (collapsingToolbar != null) {
                 collapsingToolbar.setTitle(movie.getTitle());
             }
+
+            setHasOptionsMenu(true);
 
         }
     }
@@ -97,6 +110,29 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
+    private void addFavourite(MenuItem item) {
+        FavouritesContentValues favMovie = new FavouritesContentValues();
+        favMovie.putMovieId(movie.getId())
+                .putBackdrop(movie.getBackdrop())
+                .putPosterPath(movie.getPosterPath())
+                .putOverview(movie.getOverView())
+                .putReleaseDate(movie.getReleaseDate())
+                .putTitle(movie.getTitle())
+                .putTrailer(movie.getTrailer())
+                .putUserRating(movie.getUserRating());
+        getActivity().getContentResolver().insert(FavouritesColumns.CONTENT_URI, favMovie.values());
+        item.setIcon(R.drawable.ic_favorite_accent);
+    }
+
+    private void deleteFavourite(MenuItem item) {
+        selection.delete(getActivity().getContentResolver());
+        item.setIcon(R.drawable.ic_favorite_border_accent);
+    }
+
+    private FavouritesCursor getFavourites() {
+        return selection.query(getActivity().getContentResolver());
+    }
+
     private void showIntro(FloatingActionButton fab) {
         new MaterialIntroView.Builder(getActivity())
                 .enableDotAnimation(true)
@@ -118,5 +154,38 @@ public class MovieDetailFragment extends Fragment {
         else
             Snackbar.make(getActivity().findViewById(android.R.id.content), "Oops! No trailer found", Snackbar.LENGTH_SHORT)
                     .show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        inflater.inflate(R.menu.menu_favourite_item, menu);
+        MenuItem favourite = menu.findItem(R.id.favourite);
+        if (getFavourites().getCount() > 0)
+            favourite.setIcon(R.drawable.ic_favorite_accent);
+        //return super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            // This ID represents the Home or Up button. In the case of this
+            // activity, the Up button is shown. Use NavUtils to allow users
+            // to navigate up one level in the application structure. For
+            // more details, see the Navigation pattern on Android Design:
+            //
+            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+            //
+            case R.id.favourite:
+                if (getFavourites().getCount() > 0) {
+                    deleteFavourite(item);
+                } else {
+                    addFavourite(item);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
