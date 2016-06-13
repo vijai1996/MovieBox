@@ -10,26 +10,37 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.orpheusdroid.moviebox.Constants;
 import com.orpheusdroid.moviebox.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by vijai on 10-06-2016.
  */
-public class MovieDetailsHandler extends AsyncTask<String, Void, Bitmap> {
+public class MovieDetailsHandler extends AsyncTask<String, Void, ArrayList<ReviewsDataHolder>> {
     private MovieDataHolder movie;
     private CollapsingToolbarLayout collapsingToolbar;
     private Context mContext;
+    private Bitmap banner;
     private boolean isActivity;
     private ImageView iv;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private MovieDetailsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public MovieDetailsHandler(Context context, RecyclerView recyclerView, CollapsingToolbarLayout toolbarLayout,
@@ -42,14 +53,6 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, Bitmap> {
         this.movie = movie;
     }
 
-    private void initList() {
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(mContext);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MovieDetailsAdapter(mContext, movie);
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
     public static final int getColorResource(Context context, int id) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 23) {
@@ -57,6 +60,14 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, Bitmap> {
         } else {
             return context.getResources().getColor(id);
         }
+    }
+
+    private void initList() {
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MovieDetailsAdapter(mContext, movie);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void setImageToToolbar(Bitmap banner) {
@@ -79,25 +90,69 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, Bitmap> {
         initList();
     }
 
-    @Override
-    protected Bitmap doInBackground(String... strings) {
+    private void getBitmap(String bannerUrl) {
         try {
-            URL url = new URL(strings[0]);
+            URL url = new URL(bannerUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
+            banner = BitmapFactory.decodeStream(input);
+            connection.disconnect();
         } catch (IOException e) {
             // Log exception
-            return null;
+        }
+    }
+
+    private JSONObject getReviews(String reviewsUrl) {
+        try {
+            URL url = new URL(reviewsUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = new BufferedInputStream(connection.getInputStream());
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
+            StringBuilder builder = new StringBuilder();
+
+            String inputString;
+            while ((inputString = bufferedReader.readLine()) != null) {
+                builder.append(inputString);
+            }
+            connection.disconnect();
+            return new JSONObject(builder.toString());
+        } catch (IOException | JSONException e) {
+            return new JSONObject();
         }
     }
 
     @Override
-    protected void onPostExecute(Bitmap banner) {
+    protected ArrayList<ReviewsDataHolder> doInBackground(String... strings) {
+        getBitmap(strings[0]);
+        JSONObject topLevel = getReviews(strings[1]);
+        ArrayList<ReviewsDataHolder> reviews = new ArrayList<>();
+        try {
+            JSONArray main = topLevel.getJSONArray("results");
+            for (int i = 0; i < main.length(); i++) {
+                JSONObject reviewJson = main.getJSONObject(i);
+                ReviewsDataHolder review = new ReviewsDataHolder(movie.getId(),
+                        reviewJson.getString(Constants.REVIEW_AUTHOR_TAG),
+                        reviewJson.getString(Constants.REVIEW_CONTENT_TAG),
+                        reviewJson.getString(Constants.REVIEW_ID_TAG));
+                reviews.add(review);
+                Log.d("Reviews added", "Review is added to dataSet");
+            }
+        } catch (JSONException | java.lang.NullPointerException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+
+
+    @Override
+    protected void onPostExecute(ArrayList<ReviewsDataHolder> reviews) {
         iv.setImageBitmap(banner);
         if (isActivity)
             setImageToToolbar(banner);
+        mAdapter.swap(movie, reviews);
     }
 }

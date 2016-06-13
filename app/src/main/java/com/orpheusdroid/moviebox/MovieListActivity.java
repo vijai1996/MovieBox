@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,6 +49,7 @@ import co.mobiwise.materialintro.view.MaterialIntroView;
  */
 public class MovieListActivity extends AppCompatActivity {
 
+    private static String INTRO_ID = "sort_order_intro";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -61,7 +61,6 @@ public class MovieListActivity extends AppCompatActivity {
     private JSONObject jsonPopular, jsonTopRated;
     private FavouritesCursor favouritesCursor;
     private Spinner mNavigationSpinner;
-    private static String INTRO_ID = "sort_order_intro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +297,7 @@ public class MovieListActivity extends AppCompatActivity {
                     JSONObject movieObject = main.getJSONObject(i);
                     String id = movieObject.getString(Constants.MOVIE_ID);
                     String TrailerUrl = Constants.API_BASE_URL + id + "/videos?api_key=" + Constants.API_KEY;
+                    Log.d("Trailer URL", TrailerUrl);
                     JSONObject trailerObj = new JSONObject(getJson(TrailerUrl));
                     JSONArray trailerLinks = trailerObj.getJSONArray("results");
                     String trailerKey = "";

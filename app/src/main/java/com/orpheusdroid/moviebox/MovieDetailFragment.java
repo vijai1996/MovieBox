@@ -105,7 +105,8 @@ public class MovieDetailFragment extends Fragment {
 
         //Let's do some fetching of data again and set the data
         new MovieDetailsHandler(getActivity(), mRecyclerView, collapsingToolbar, iv,movie, false).
-                execute(movie.getBackdrop());
+                execute(movie.getBackdrop(),
+                        Constants.API_BASE_URL + movie.getId() + "/reviews?api_key=" + Constants.API_KEY);
 
         return rootView;
     }

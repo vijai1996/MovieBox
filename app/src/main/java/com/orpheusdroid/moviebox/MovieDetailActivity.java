@@ -22,7 +22,6 @@ import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesContentVal
 import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
 import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesSelection;
 
-import co.mobiwise.materialintro.MaterialIntroConfiguration;
 import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
@@ -34,12 +33,12 @@ import co.mobiwise.materialintro.view.MaterialIntroView;
  * in a {@link MovieListActivity}.
  */
 public class MovieDetailActivity extends AppCompatActivity {
-    private MovieDataHolder movie;
+    public static String INTRO_TRAILER_ID = "movie_detail_trailer";
     CollapsingToolbarLayout collapsingToolbar;
+    private MovieDataHolder movie;
     private ImageView iv;
     private RecyclerView mRecyclerView;
     private FavouritesSelection selection;
-    public static String INTRO_TRAILER_ID = "movie_detail_trailer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +70,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         showIntro();
 
         new MovieDetailsHandler(this, mRecyclerView, collapsingToolbar, iv,movie, true).
-                execute(movie.getBackdrop());
+                execute(movie.getBackdrop(),
+                        Constants.API_BASE_URL + movie.getId() + "/reviews?api_key=" + Constants.API_KEY);
     }
 
     private void showIntro() {
