@@ -100,8 +100,6 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
         @Override
         public void onClick(View v) {
             if (getLayoutPosition() == 3) {
-                Toast.makeText(context, "Lets start a review activity later!", Toast.LENGTH_SHORT)
-                        .show();
                 if (reviews.size() > 0) {
                     Intent intent = new Intent(context, ReviewActivity.class);
                     intent.putExtra(ReviewActivity.REVIEW_ARGS, reviews);

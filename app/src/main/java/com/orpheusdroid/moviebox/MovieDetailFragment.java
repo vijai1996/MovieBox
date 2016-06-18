@@ -41,6 +41,7 @@ public class MovieDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "movie";
+    public static final String ARG_TWO_PANE = "two_pane";
 
     private MovieDataHolder movie;
 
@@ -49,6 +50,7 @@ public class MovieDetailFragment extends Fragment {
     private ImageView iv;
     private RecyclerView mRecyclerView;
     private FavouritesSelection selection;
+    private boolean mTwoPane;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -65,6 +67,7 @@ public class MovieDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             movie = getArguments().getParcelable(ARG_ITEM_ID);
+            mTwoPane = getArguments().getBoolean(ARG_TWO_PANE, false);
 
             Activity activity = this.getActivity();
 
@@ -76,35 +79,40 @@ public class MovieDetailFragment extends Fragment {
                 collapsingToolbar.setTitle(movie.getTitle());
             }
 
-            setHasOptionsMenu(true);
-
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.movie_detail, container, false);
+        View rootView;
+        if (mTwoPane) {
+            rootView = inflater.inflate(R.layout.movie_details_recycler, container, false);
+            iv = ((MovieDetailActivity) getActivity()).getIv();
+        } else {
+            rootView = inflater.inflate(R.layout.movie_detail, container, false);
+            iv = (ImageView) rootView.findViewById(R.id.movie_banner);
 
-        iv = (ImageView) rootView.findViewById(R.id.movie_banner);
+            FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fabOnClick();
+                }
+            });
+
+            setHasOptionsMenu(true);
+
+            TextView title = (TextView) rootView.findViewById(R.id.title);
+            title.setText(movie.getTitle());
+
+            showIntro(fab);
+            rootView.findViewById(R.id.header_layout).setVisibility(View.VISIBLE);
+        }
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.movies_details_recycler);
-
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fabOnClick();
-            }
-        });
-
-        TextView title = (TextView) rootView.findViewById(R.id.title);
-        title.setText(movie.getTitle());
-
-        showIntro(fab);
-
-        //Let's do some fetching of data again and set the data
-        new MovieDetailsHandler(getActivity(), mRecyclerView, collapsingToolbar, iv,movie, false).
+        //Let's do some fetching of data again and set the data*/
+        new MovieDetailsHandler(getActivity(), mRecyclerView, collapsingToolbar, iv, movie, mTwoPane).
                 execute(movie.getBackdrop(),
                         Constants.API_BASE_URL + movie.getId() + "/reviews?api_key=" + Constants.API_KEY);
 

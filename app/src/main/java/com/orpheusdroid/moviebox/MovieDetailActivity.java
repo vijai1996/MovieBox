@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
-import com.orpheusdroid.moviebox.Adapter.MovieDetailsHandler;
 import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesColumns;
 import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesContentValues;
 import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
@@ -34,10 +32,9 @@ import co.mobiwise.materialintro.view.MaterialIntroView;
  */
 public class MovieDetailActivity extends AppCompatActivity {
     public static String INTRO_TRAILER_ID = "movie_detail_trailer";
+    public ImageView iv;
     CollapsingToolbarLayout collapsingToolbar;
     private MovieDataHolder movie;
-    private ImageView iv;
-    private RecyclerView mRecyclerView;
     private FavouritesSelection selection;
 
     @Override
@@ -62,16 +59,26 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        mRecyclerView = (RecyclerView) findViewById(R.id.movies_details_recycler);
         iv = (ImageView) findViewById(R.id.movie_banner);
 
         //Let's do some fetching of data again and set the data
 
         showIntro();
 
-        new MovieDetailsHandler(this, mRecyclerView, collapsingToolbar, iv,movie, true).
-                execute(movie.getBackdrop(),
-                        Constants.API_BASE_URL + movie.getId() + "/reviews?api_key=" + Constants.API_KEY);
+        if (savedInstanceState == null) {
+            Bundle args = new Bundle();
+            args.putParcelable(MovieDetailFragment.ARG_ITEM_ID, movie);
+            args.putBoolean(MovieDetailFragment.ARG_TWO_PANE, true);
+            MovieDetailFragment detailFragment = new MovieDetailFragment();
+            detailFragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.movie_detail_container, detailFragment)
+                    .commit();
+        }
+    }
+
+    public ImageView getIv() {
+        return iv;
     }
 
     private void showIntro() {
