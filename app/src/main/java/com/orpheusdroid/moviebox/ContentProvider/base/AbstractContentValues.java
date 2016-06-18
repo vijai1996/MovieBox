@@ -1,8 +1,8 @@
-package com.orpheusdroid.moviebox.ContentProvider.base;
+package com.orpheusdroid.moviebox.contentprovider.base;
 
-import android.content.Context;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 
 public abstract class AbstractContentValues {

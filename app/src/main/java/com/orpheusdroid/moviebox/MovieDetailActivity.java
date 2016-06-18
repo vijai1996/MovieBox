@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesColumns;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesContentValues;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesSelection;
+import com.orpheusdroid.moviebox.adapter.MovieDataHolder;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesColumns;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesContentValues;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesCursor;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesSelection;
 
 import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;

@@ -7,8 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
-import com.orpheusdroid.moviebox.Adapter.ReviewsAdapter;
-import com.orpheusdroid.moviebox.Adapter.ReviewsDataHolder;
+import com.orpheusdroid.moviebox.adapter.ReviewsAdapter;
+import com.orpheusdroid.moviebox.adapter.ReviewsDataHolder;
 
 import java.util.ArrayList;
 

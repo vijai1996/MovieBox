@@ -1,30 +1,25 @@
-package com.orpheusdroid.moviebox.ContentProvider;
-
-import java.util.Arrays;
+package com.orpheusdroid.moviebox.contentprovider;
 
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.orpheusdroid.moviebox.BuildConfig;
-import com.orpheusdroid.moviebox.ContentProvider.base.BaseContentProvider;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesColumns;
+import com.orpheusdroid.moviebox.contentprovider.base.BaseContentProvider;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesColumns;
+
+import java.util.Arrays;
 
 public class FavouritesProvider extends BaseContentProvider {
-    private static final String TAG = FavouritesProvider.class.getSimpleName();
-
-    private static final boolean DEBUG = BuildConfig.DEBUG;
-
-    private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
-    private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
-
     public static final String AUTHORITY = "com.orpheusdroid.moviebox.provider";
     public static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
-
+    private static final String TAG = FavouritesProvider.class.getSimpleName();
+    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
+    private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
     private static final int URI_TYPE_FAVOURITES = 0;
     private static final int URI_TYPE_FAVOURITES_ID = 1;
 

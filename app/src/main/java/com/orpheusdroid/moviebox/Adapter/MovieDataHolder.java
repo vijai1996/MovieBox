@@ -1,15 +1,27 @@
-package com.orpheusdroid.moviebox.Adapter;
+package com.orpheusdroid.moviebox.adapter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesCursor;
 
 /**
  * Created by vijai on 07-06-2016.
  */
 public class MovieDataHolder implements Parcelable{
 
+    public static final Creator<MovieDataHolder> CREATOR= new Creator<MovieDataHolder>() {
+
+        @Override
+        public MovieDataHolder createFromParcel(Parcel source) {
+            return new MovieDataHolder(source);  //using parcelable constructor
+        }
+
+        @Override
+        public MovieDataHolder[] newArray(int size) {
+            return new MovieDataHolder[size];
+        }
+    };
     /*
     A pojo class implementing parcelable having getters to return data on a movie.
      */
@@ -36,6 +48,21 @@ public class MovieDataHolder implements Parcelable{
 
     public MovieDataHolder (){
 
+    }
+
+    //parcel part
+    public MovieDataHolder(Parcel in){
+        String[] data= new String[8];
+
+        in.readStringArray(data);
+        this.Title= data[0];
+        this.PosterPath= data[1];
+        this.Backdrop= data[2];
+        this.OverView = data[3];
+        this.UserRating = data[4];
+        this.ReleaseDate = data[5];
+        this.id = data[6];
+        this.trailer = data[7];
     }
 
     public MovieDataHolder fromCursor (FavouritesCursor cursor){
@@ -82,43 +109,14 @@ public class MovieDataHolder implements Parcelable{
         return trailer;
     }
 
-    //parcel part
-    public MovieDataHolder(Parcel in){
-        String[] data= new String[8];
-
-        in.readStringArray(data);
-        this.Title= data[0];
-        this.PosterPath= data[1];
-        this.Backdrop= data[2];
-        this.OverView = data[3];
-        this.UserRating = data[4];
-        this.ReleaseDate = data[5];
-        this.id = data[6];
-        this.trailer = data[7];
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{this.Title,this.PosterPath
                 ,this.Backdrop, this.OverView, this.UserRating, this.ReleaseDate, this.id, this.trailer });
     }
-
-    public static final Creator<MovieDataHolder> CREATOR= new Creator<MovieDataHolder>() {
-
-        @Override
-        public MovieDataHolder createFromParcel(Parcel source) {
-            return new MovieDataHolder(source);  //using parcelable constructor
-        }
-
-        @Override
-        public MovieDataHolder[] newArray(int size) {
-            return new MovieDataHolder[size];
-        }
-    };
 }

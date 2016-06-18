@@ -1,11 +1,10 @@
-package com.orpheusdroid.moviebox.ContentProvider.base;
-
-import java.util.Date;
-import java.util.HashMap;
+package com.orpheusdroid.moviebox.contentprovider.base;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.provider.BaseColumns;
+
+import java.util.Date;
+import java.util.HashMap;
 
 public abstract class AbstractCursor extends CursorWrapper {
     private final HashMap<String, Integer> mColumnIndexes;

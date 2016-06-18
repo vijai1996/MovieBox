@@ -32,7 +32,7 @@
         </activity>
 
         <provider
-            android:name=".ContentProvider.FavouritesProvider"
+            android:name=".contentprovider.FavouritesProvider"
             android:authorities="com.orpheusdroid.moviebox.provider"
             android:exported="false" />
 

@@ -1,4 +1,4 @@
-package com.orpheusdroid.moviebox.ContentProvider.base;
+package com.orpheusdroid.moviebox.contentprovider.base;
 
 public interface BaseModel {
 }

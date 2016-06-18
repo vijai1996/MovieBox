@@ -1,11 +1,8 @@
-package com.orpheusdroid.moviebox.ContentProvider.favourites;
+package com.orpheusdroid.moviebox.contentprovider.favourites;
 
-import com.orpheusdroid.moviebox.ContentProvider.base.BaseModel;
-
-import java.util.Date;
-
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.orpheusdroid.moviebox.contentprovider.base.BaseModel;
 
 /**
  * Data model for the {@code favourites} table.

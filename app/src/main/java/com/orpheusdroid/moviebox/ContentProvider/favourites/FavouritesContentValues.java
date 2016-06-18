@@ -1,14 +1,11 @@
-package com.orpheusdroid.moviebox.ContentProvider.favourites;
+package com.orpheusdroid.moviebox.contentprovider.favourites;
 
-import java.util.Date;
-
-import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.orpheusdroid.moviebox.ContentProvider.base.AbstractContentValues;
+import com.orpheusdroid.moviebox.contentprovider.base.AbstractContentValues;
 
 /**
  * Content values wrapper for the {@code favourites} table.

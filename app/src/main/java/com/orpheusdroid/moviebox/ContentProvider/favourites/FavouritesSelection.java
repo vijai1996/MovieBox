@@ -1,13 +1,11 @@
-package com.orpheusdroid.moviebox.ContentProvider.favourites;
+package com.orpheusdroid.moviebox.contentprovider.favourites;
 
-import java.util.Date;
-
-import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.orpheusdroid.moviebox.ContentProvider.base.AbstractSelection;
+import com.orpheusdroid.moviebox.contentprovider.base.AbstractSelection;
 
 /**
  * Selection for the {@code favourites} table.

@@ -1,12 +1,9 @@
-package com.orpheusdroid.moviebox.ContentProvider.favourites;
-
-import java.util.Date;
+package com.orpheusdroid.moviebox.contentprovider.favourites;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.orpheusdroid.moviebox.ContentProvider.base.AbstractCursor;
+import com.orpheusdroid.moviebox.contentprovider.base.AbstractCursor;
 
 /**
  * Cursor wrapper for the {@code favourites} table.

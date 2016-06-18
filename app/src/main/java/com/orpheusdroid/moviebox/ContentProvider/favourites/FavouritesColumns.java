@@ -1,10 +1,9 @@
-package com.orpheusdroid.moviebox.ContentProvider.favourites;
+package com.orpheusdroid.moviebox.contentprovider.favourites;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.orpheusdroid.moviebox.ContentProvider.FavouritesProvider;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesColumns;
+import com.orpheusdroid.moviebox.contentprovider.FavouritesProvider;
 
 /**
  * Columns for the {@code favourites} table.

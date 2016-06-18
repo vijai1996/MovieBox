@@ -1,8 +1,7 @@
-package com.orpheusdroid.moviebox.ContentProvider;
+package com.orpheusdroid.moviebox.contentprovider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-
 import android.util.Log;
 
 import com.orpheusdroid.moviebox.BuildConfig;

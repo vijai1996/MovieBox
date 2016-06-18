@@ -16,10 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.orpheusdroid.moviebox.Adapter.GridLayoutAdapter;
-import com.orpheusdroid.moviebox.Adapter.MovieDataHolder;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesCursor;
-import com.orpheusdroid.moviebox.ContentProvider.favourites.FavouritesSelection;
+import com.orpheusdroid.moviebox.adapter.GridLayoutAdapter;
+import com.orpheusdroid.moviebox.adapter.MovieDataHolder;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesCursor;
+import com.orpheusdroid.moviebox.contentprovider.favourites.FavouritesSelection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
