@@ -107,7 +107,6 @@ public class MovieDetailFragment extends Fragment {
             title.setText(movie.getTitle());
 
             showIntro(fab);
-            rootView.findViewById(R.id.header_layout).setVisibility(View.VISIBLE);
         }
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.movies_details_recycler);
