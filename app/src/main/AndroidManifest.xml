@@ -36,7 +36,7 @@
             android:authorities="com.orpheusdroid.moviebox.provider"
             android:exported="false" />
 
-        <activity android:name=".ReviewActivity"></activity>
+        <activity android:name=".ReviewActivity" />
     </application>
 
 </manifest>

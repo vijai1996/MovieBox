@@ -1,4 +1,4 @@
-package com.orpheusdroid.moviebox.Adapter;
+package com.orpheusdroid.moviebox.adapter;
 
 import android.content.Context;
 import android.content.Intent;
