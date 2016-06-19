@@ -68,7 +68,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
             args.putParcelable(MovieDetailFragment.ARG_ITEM_ID, movie);
-            args.putBoolean(MovieDetailFragment.ARG_TWO_PANE, true);
+            args.putBoolean(MovieDetailFragment.ARG_TWO_PANE, false);
             MovieDetailFragment detailFragment = new MovieDetailFragment();
             detailFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()

@@ -37,7 +37,7 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, ArrayList<Revie
     private CollapsingToolbarLayout collapsingToolbar;
     private Context mContext;
     private Bitmap banner;
-    private boolean isActivity;
+    private boolean isTwopane;
     private ImageView iv;
     private RecyclerView mRecyclerView;
     private MovieDetailsAdapter mAdapter;
@@ -49,7 +49,7 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, ArrayList<Revie
         mRecyclerView = recyclerView;
         collapsingToolbar = toolbarLayout;
         iv = banner;
-        this.isActivity = isActivity;
+        this.isTwopane = isActivity;
         this.movie = movie;
     }
 
@@ -151,7 +151,7 @@ public class MovieDetailsHandler extends AsyncTask<String, Void, ArrayList<Revie
     @Override
     protected void onPostExecute(ArrayList<ReviewsDataHolder> reviews) {
         iv.setImageBitmap(banner);
-        if (isActivity)
+        if (!isTwopane)
             setImageToToolbar(banner);
         mAdapter.swap(movie, reviews);
     }

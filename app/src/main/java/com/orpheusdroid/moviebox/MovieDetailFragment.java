@@ -51,6 +51,7 @@ public class MovieDetailFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private FavouritesSelection selection;
     private boolean mTwoPane;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -67,7 +68,7 @@ public class MovieDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             movie = getArguments().getParcelable(ARG_ITEM_ID);
-            mTwoPane = getArguments().getBoolean(ARG_TWO_PANE, false);
+            mTwoPane = getArguments().getBoolean(ARG_TWO_PANE, true);
 
             Activity activity = this.getActivity();
 
@@ -86,7 +87,7 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView;
-        if (mTwoPane) {
+        if (!mTwoPane) {
             rootView = inflater.inflate(R.layout.movie_details_recycler, container, false);
             iv = ((MovieDetailActivity) getActivity()).getIv();
         } else {
@@ -130,11 +131,19 @@ public class MovieDetailFragment extends Fragment {
                 .putUserRating(movie.getUserRating());
         getActivity().getContentResolver().insert(FavouritesColumns.CONTENT_URI, favMovie.values());
         item.setIcon(R.drawable.ic_favorite_accent);
+        if (mTwoPane && ((MovieListActivity) getActivity()).mNavigationSpinner.getSelectedItemPosition() == 2)
+            updateFavourites();
     }
 
     private void deleteFavourite(MenuItem item) {
         selection.delete(getActivity().getContentResolver());
         item.setIcon(R.drawable.ic_favorite_border_accent);
+        if (mTwoPane && ((MovieListActivity) getActivity()).mNavigationSpinner.getSelectedItemPosition() == 2)
+            updateFavourites();
+    }
+
+    private void updateFavourites() {
+        ((MovieListActivity) getActivity()).setRecyclerViewfromCursor();
     }
 
     private FavouritesCursor getFavourites() {

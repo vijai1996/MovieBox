@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import com.orpheusdroid.moviebox.Constants;
 import com.orpheusdroid.moviebox.MovieListActivity;
 import com.orpheusdroid.moviebox.R;
+import com.orpheusdroid.moviebox.UiCallbacks;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,10 +31,10 @@ public class HttpRequest extends AsyncTask<String, Void, ArrayList<MovieDataHold
     private JSONObject jsonPopular, jsonTopRated;
     private ProgressDialog dialog;
     private String mCategory;
-    private MovieListActivity.ApiCallback listener;
+    private UiCallbacks listener;
     private MovieListActivity mContext;
 
-    public HttpRequest(MovieListActivity context, String category, MovieListActivity.ApiCallback listener) {
+    public HttpRequest(MovieListActivity context, String category, UiCallbacks listener) {
         mCategory = category;
         this.listener = listener;
         mContext = context;
@@ -149,7 +150,7 @@ public class HttpRequest extends AsyncTask<String, Void, ArrayList<MovieDataHold
 
     @Override
     protected void onPostExecute(ArrayList<MovieDataHolder> datas) {
-        listener.onSuccess(datas);
+        listener.onMoviesReceived(datas);
         dialog.dismiss();
     }
 }

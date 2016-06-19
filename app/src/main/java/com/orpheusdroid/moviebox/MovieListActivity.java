@@ -1,5 +1,6 @@
 package com.orpheusdroid.moviebox;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -32,9 +33,10 @@ import co.mobiwise.materialintro.view.MaterialIntroView;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MovieListActivity extends AppCompatActivity {
+public class MovieListActivity extends AppCompatActivity implements UiCallbacks {
 
     private static String INTRO_ID = "sort_order_intro";
+    public Spinner mNavigationSpinner;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -44,7 +46,7 @@ public class MovieListActivity extends AppCompatActivity {
     private GridLayoutAdapter adapter;
     private View recyclerView;
     private FavouritesCursor favouritesCursor;
-    private Spinner mNavigationSpinner;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class MovieListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        mContext = this;
 
         //Let's add a spinner to the toolbar for sort criteria
         addSpinner(toolbar);
@@ -111,25 +115,14 @@ public class MovieListActivity extends AppCompatActivity {
         mNavigationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                HttpRequest req;
                 switch (position) {
                     case 0:
-                        req = new HttpRequest(MovieListActivity.this, Constants.POPULAR, new ApiCallback() {
-                            @Override
-                            public void onSuccess(ArrayList<MovieDataHolder> datas) {
-                                updateDataset(datas);
-                            }
-                        });
-                        req.execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
+                        new HttpRequest(MovieListActivity.this, Constants.POPULAR, MovieListActivity.this)
+                                .execute(Constants.API_BASE_URL + Constants.POPULAR + "/?api_key=" + Constants.API_KEY);
                         break;
                     case 1:
-                        req = new HttpRequest(MovieListActivity.this, Constants.TOP_RATED, new ApiCallback() {
-                            @Override
-                            public void onSuccess(ArrayList<MovieDataHolder> datas) {
-                                updateDataset(datas);
-                            }
-                        });
-                        req.execute(Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
+                        new HttpRequest(MovieListActivity.this, Constants.TOP_RATED, MovieListActivity.this)
+                                .execute(Constants.API_BASE_URL + Constants.TOP_RATED + "/?api_key=" + Constants.API_KEY);
                         break;
                     case 2:
                         setRecyclerViewfromCursor();
@@ -160,7 +153,7 @@ public class MovieListActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void setRecyclerViewfromCursor() {
+    public void setRecyclerViewfromCursor() {
         ArrayList<MovieDataHolder> movies = new ArrayList<>();
         FavouritesSelection favourites = new FavouritesSelection();
         favouritesCursor = favourites.query(getContentResolver());
@@ -204,7 +197,8 @@ public class MovieListActivity extends AppCompatActivity {
         adapter.swap(newMovies);
     }
 
-    public interface ApiCallback {
-        void onSuccess(ArrayList<MovieDataHolder> datas);
+    @Override
+    public void onMoviesReceived(ArrayList<MovieDataHolder> datas) {
+        updateDataset(datas);
     }
 }
