@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MovieBox</string>
     <string name="title_movie_detail">Movie Detail</string>
-    <string name="themoviedb_api_key" translatable="false">6963a3bdda0a9b45cc06fd835e20f560</string>
+    <string name="themoviedb_api_key" translatable="false">Placeholder API</string>
     <string name="ok">ok</string>
     <string name="no_internet_title">No Internet</string>
     <string name="no_internet_message">There is a issue with connecting to internet. Please check
