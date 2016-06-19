@@ -67,7 +67,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
                 holder.Content.setText(movie.getReleaseDate());
                 break;
             case 3:
-                holder.Title.setText(resources.getString(R.string.user_review));
+                holder.Title.setText(resources.getString(R.string.user_review, reviews.size()));
                 if (reviews.size() > 0)
                     holder.Content.setText(reviews.get(0).getReview());
                 else

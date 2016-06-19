@@ -15,7 +15,7 @@
     <string name="user_rating">User Rating</string>
     <string name="plot_synopsis">Plot Synopsis</string>
     <string name="release_date">Release Date</string>
-    <string name="user_review">User Review</string>
+    <string name="user_review">User Reviews (%d)</string>
     <string name="placeholder_text">Lorem ipsum dolor sit amet</string>
     <string name="no_favourites_title">No Favourites</string>
     <string name="no_favourites_message">Woops! You dont have any favourite movies yet!
