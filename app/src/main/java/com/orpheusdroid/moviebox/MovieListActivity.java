@@ -2,7 +2,6 @@ package com.orpheusdroid.moviebox;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -63,8 +62,6 @@ public class MovieListActivity extends AppCompatActivity {
         Constants.setApiKey(getResources().getString(R.string.themoviedb_api_key));
 
         recyclerView = findViewById(R.id.movie_list);
-        //We dont want the recyclerview to be null!
-        assert recyclerView != null;
 
         if (findViewById(R.id.movie_detail_container) != null) {
             // The detail container view will be present only in the
@@ -189,7 +186,7 @@ public class MovieListActivity extends AppCompatActivity {
     }
 
     //Setup a empty recycler before the data is fetched and loaded
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<MovieDataHolder> movies) {
+    private void setupRecyclerView(RecyclerView recyclerView, ArrayList<MovieDataHolder> movies) {
         //Set the recyclerview has a fixed size as the api always returns only 20 items
         recyclerView.setHasFixedSize(true);
 

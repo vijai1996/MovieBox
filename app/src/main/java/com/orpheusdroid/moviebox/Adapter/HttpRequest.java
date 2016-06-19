@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.orpheusdroid.moviebox.Constants;
 import com.orpheusdroid.moviebox.MovieListActivity;
@@ -57,8 +56,8 @@ public class HttpRequest extends AsyncTask<String, Void, ArrayList<MovieDataHold
             conn.setConnectTimeout(15001);
             conn.setDoInput(true);
 
-            int code = conn.getResponseCode();
-            Log.d("Connection code", "" + code);
+            //int code = conn.getResponseCode();
+            //Log.d("Connection code", "" + code);
             InputStream stream = new BufferedInputStream(conn.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder builder = new StringBuilder();
@@ -121,7 +120,7 @@ public class HttpRequest extends AsyncTask<String, Void, ArrayList<MovieDataHold
                 JSONObject movieObject = main.getJSONObject(i);
                 String id = movieObject.getString(Constants.MOVIE_ID);
                 String TrailerUrl = Constants.API_BASE_URL + id + "/videos?api_key=" + Constants.API_KEY;
-                Log.d("Trailer URL", TrailerUrl);
+                //Log.d("Trailer URL", TrailerUrl);
                 JSONObject trailerObj = new JSONObject(getJson(TrailerUrl));
                 JSONArray trailerLinks = trailerObj.getJSONArray("results");
                 String trailerKey = "";
@@ -150,10 +149,7 @@ public class HttpRequest extends AsyncTask<String, Void, ArrayList<MovieDataHold
 
     @Override
     protected void onPostExecute(ArrayList<MovieDataHolder> datas) {
-        //Update the recycler view and dismiss the dialog
-        //updateDataset(datas);
         listener.onSuccess(datas);
         dialog.dismiss();
-        //showIntro();
     }
 }
